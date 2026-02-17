@@ -55,8 +55,14 @@ public class ObjectDetector: BasePredictor, @unchecked Sendable {
         let label = prediction.labels[0].identifier
         let index = self.labels.firstIndex(of: label) ?? 0
         let confidence = prediction.labels[0].confidence
+        let detectionConf = prediction.confidence
         let box = Box(
-          index: index, cls: label, conf: confidence, xywh: imageRect, xywhn: invertedBox)
+          index: index,
+          cls: label,
+          conf: confidence,
+          detectionConf: detectionConf,
+          xywh: imageRect,
+          xywhn: invertedBox)
         boxes.append(box)
       }
     }
@@ -119,8 +125,14 @@ public class ObjectDetector: BasePredictor, @unchecked Sendable {
           let label = prediction.labels[0].identifier
           let index = self.labels.firstIndex(of: label) ?? 0
           let confidence = prediction.labels[0].confidence
+          let detectionConf = prediction.confidence
           let box = Box(
-            index: index, cls: label, conf: confidence, xywh: imageRect, xywhn: invertedBox)
+            index: index,
+            cls: label,
+            conf: confidence,
+            detectionConf: detectionConf,
+            xywh: imageRect,
+            xywhn: invertedBox)
           boxes.append(box)
         }
       }

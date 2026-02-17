@@ -73,14 +73,34 @@ public struct Box: @unchecked Sendable {
   /// The class label (category name) of the detected object.
   public let cls: String
 
-  /// The confidence score (0.0 to 1.0) for the detection.
+  /// The confidence score (0.0 to 1.0) for the predicted class.
   public let conf: Float
+
+  /// The confidence score (0.0 to 1.0) that the box actually contains an object.
+  public let detectionConf: Float
 
   /// The bounding box in image coordinates (x, y, width, height).
   public let xywh: CGRect
 
   /// The bounding box in normalized coordinates (0.0 to 1.0).
   public let xywhn: CGRect
+
+  /// Creates a Box, defaulting detection confidence to class confidence when not provided.
+  public init(
+    index: Int,
+    cls: String,
+    conf: Float,
+    detectionConf: Float? = nil,
+    xywh: CGRect,
+    xywhn: CGRect
+  ) {
+    self.index = index
+    self.cls = cls
+    self.conf = conf
+    self.detectionConf = detectionConf ?? conf
+    self.xywh = xywh
+    self.xywhn = xywhn
+  }
 }
 
 /// Represents segmentation mask data from a YOLO segmentation model.
