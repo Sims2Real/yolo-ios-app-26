@@ -51,9 +51,11 @@ public protocol Predictor {
   ///   - sampleBuffer: The camera frame buffer to process.
   ///   - onResultsListener: Optional listener to receive prediction results.
   ///   - onInferenceTime: Optional listener to receive performance metrics.
+  ///   - imageOrientation: The orientation of the image. Defaults to `.up`.
   func predict(
     sampleBuffer: CMSampleBuffer, onResultsListener: ResultsListener?,
-    onInferenceTime: InferenceTimeListener?)
+    onInferenceTime: InferenceTimeListener?,
+    imageOrientation: CGImagePropertyOrientation)
 
   /// Processes a static image and returns results synchronously.
   ///

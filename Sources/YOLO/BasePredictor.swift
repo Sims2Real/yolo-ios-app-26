@@ -226,9 +226,11 @@ public class BasePredictor: Predictor, @unchecked Sendable {
   ///   - sampleBuffer: The camera frame buffer to process.
   ///   - onResultsListener: Optional listener to receive prediction results.
   ///   - onInferenceTime: Optional listener to receive performance metrics.
+  ///   - imageOrientation: The orientation of the image. Defaults to `.up`.
   public func predict(
     sampleBuffer: CMSampleBuffer, onResultsListener: ResultsListener?,
-    onInferenceTime: InferenceTimeListener?
+    onInferenceTime: InferenceTimeListener?,
+    imageOrientation: CGImagePropertyOrientation = .up
   ) {
     if currentBuffer == nil, let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) {
       currentBuffer = pixelBuffer
@@ -240,7 +242,6 @@ public class BasePredictor: Predictor, @unchecked Sendable {
       /// - Tag: MappingOrientation
       // The frame is always oriented based on the camera sensor,
       // so in most cases Vision needs to rotate it for the model to work as expected.
-      let imageOrientation: CGImagePropertyOrientation = .up
 
       // Invoke a VNRequestHandler with that image
       let handler = VNImageRequestHandler(
