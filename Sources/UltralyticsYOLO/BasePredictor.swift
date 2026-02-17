@@ -316,9 +316,11 @@ public class BasePredictor: Predictor, @unchecked Sendable {
   ///   - sampleBuffer: The camera frame buffer to process.
   ///   - onResultsListener: Optional listener to receive prediction results.
   ///   - onInferenceTime: Optional listener to receive performance metrics.
+  ///   - imageOrientation: The orientation of the image. Defaults to `.up`.
   public func predict(
     sampleBuffer: CMSampleBuffer, onResultsListener: ResultsListener?,
-    onInferenceTime: InferenceTimeListener?
+    onInferenceTime: InferenceTimeListener?,
+    imageOrientation: CGImagePropertyOrientation = .up
   ) {
     guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
     currentOnResultsListener = onResultsListener
@@ -328,7 +330,7 @@ public class BasePredictor: Predictor, @unchecked Sendable {
       isUpdating = false
       return
     }
-    let handler = makeRequestHandler(for: pixelBuffer)
+    let handler = makeRequestHandler(for: pixelBuffer, orientation: imageOrientation)
     guard perform(request, with: handler, errorMessage: "Vision request failed") else {
       isUpdating = false
       return
@@ -352,12 +354,15 @@ public class BasePredictor: Predictor, @unchecked Sendable {
     return VNImageRequestHandler(ciImage: image, options: [:])
   }
 
-  func makeRequestHandler(for pixelBuffer: CVPixelBuffer) -> VNImageRequestHandler {
+  func makeRequestHandler(
+    for pixelBuffer: CVPixelBuffer,
+    orientation: CGImagePropertyOrientation? = nil
+  ) -> VNImageRequestHandler {
     inputSize = CGSize(
       width: CVPixelBufferGetWidth(pixelBuffer), height: CVPixelBufferGetHeight(pixelBuffer))
     t0 = CACurrentMediaTime()
     return VNImageRequestHandler(
-      cvPixelBuffer: pixelBuffer, orientation: cameraFrameOrientation, options: [:])
+      cvPixelBuffer: pixelBuffer, orientation: orientation ?? cameraFrameOrientation, options: [:])
   }
 
   /// The camera output is already configured into the app's inference orientation.

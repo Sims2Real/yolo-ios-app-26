@@ -408,7 +408,12 @@ public final class VideoCapture: NSObject, @unchecked Sendable {
       shortSide = min(w, h)
       frameSizeCaptured = true
     }
-    predictor.predict(sampleBuffer: sampleBuffer, onResultsListener: self, onInferenceTime: self)
+    let imageOrientation: CGImagePropertyOrientation = .up
+    predictor.predict(
+      sampleBuffer: sampleBuffer,
+      onResultsListener: self,
+      onInferenceTime: self,
+      imageOrientation: imageOrientation)
     currentBuffer = nil
   }
 
